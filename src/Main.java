@@ -34,6 +34,14 @@ public class Main {
                 Pattern telPattern = Pattern.compile("([\\+]?[(]?([0-9]\\W*){3}[)]?[-\\s\\.]?([0-9]\\W*){3}[-\\s\\.]?([0-9]\\W*){4,6})");
                 Pattern mailPattern = Pattern.compile("[^@ \\t\\r\\n]+[^.]@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+");
 
+                name = cleanString(name, namePattern, 1);
+                if (name.startsWith("OK")) {
+                    name = formatName(name);
+                } else {
+                    name = "";
+
+                }
+
                 String resultLine = name + "|" + age + "|" + tel + "|" + mail;
                 writer.write(resultLine);
                 writer.newLine();
@@ -56,5 +64,37 @@ public class Main {
         return false;
     }
 
+    private static String cleanString(String field, Pattern pattern, int countDoubleSymb) {
+        String doubles = ". @()+-";
+        for (char doubleSymbol : doubles.toCharArray()) {
+            field = field.replaceAll("[" + doubleSymbol + "]+",  String.valueOf(doubleSymbol).repeat(countDoubleSymb));
+        }
+        field = field.trim();
+        String status = "ERR";
+        if (pattern.matcher(field).matches()) {
+            status = "OK";
+        }
+        return status + "|" + field;
+    }
+
+    private static String formatName(String name) {
+        name = name.split("\\|")[1];
+
+        Pattern pattern = Pattern.compile("([А-ЯA-Z][^А-ЯA-Z])");
+        Matcher matcher = pattern.matcher(name);
+        name = matcher.replaceAll(" $1").trim();
+
+        String[] nameParts = name.split(" ");
+        StringBuilder nameBuilder = new StringBuilder();
+        for (String part : nameParts) {
+            if (part != "") {
+                part = part.trim().substring(0, 1).toUpperCase() + part.trim().substring(1).toLowerCase();
+                nameBuilder.append(part).append(" ");
+            }
+
+        }
+        name = nameBuilder.toString().trim();
+        return name;
+    }
 
 }
