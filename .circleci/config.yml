@@ -3,7 +3,8 @@ jobs:
   build:
     working_directory: ~/project
     docker:
-      - image: circleci/openjdk:11-jdk-buster
+      - image: openjdk:17.0.1-jdk-oracle
+
     steps:
       - checkout
       - run: mvn -U clean install
