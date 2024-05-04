@@ -42,6 +42,28 @@ public class Main {
 
                 }
 
+                age = cleanString(age, agePattern, 1);
+                if (age.startsWith("OK")) {
+                    age = age.split("\\|")[1];
+                } else {
+                    age = "";
+
+                }
+
+                tel = cleanString(tel, telPattern, 0);
+                if (tel.startsWith("OK")) {
+                    tel = formatPhoneNumber(tel);
+                } else {
+                    tel = "";
+                }
+
+                mail = cleanString(mail, mailPattern, 1);
+                if (mail.startsWith("OK")) {
+                    mail = mail.split("\\|")[1];
+                } else {
+                    mail = "";
+                }
+
                 String resultLine = name + "|" + age + "|" + tel + "|" + mail;
                 writer.write(resultLine);
                 writer.newLine();
@@ -95,6 +117,23 @@ public class Main {
         }
         name = nameBuilder.toString().trim();
         return name;
+    }
+
+    private static String formatPhoneNumber(String phoneNumber) {
+        String[] parts = phoneNumber.split("\\|");
+        if (parts[0].equals("OK")) {
+            String[] digits = parts[1].replaceAll("\\D", "").split("");
+            if (digits[0].equals("8")) {
+                digits[0] = "7";
+            }
+
+            String num1 = String.join("",digits).substring(1,4);
+            String num2 = String.join("",digits).substring(4,7);
+            String num3 = String.join("",digits).substring(7);
+
+            return String.format("+%s (%s) %s-%s", digits[0], num1,num2,num3);
+        }
+        return phoneNumber;
     }
 
 }
