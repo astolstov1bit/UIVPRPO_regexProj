@@ -1,0 +1,10 @@
+|||||
+|||
+|1|1|lol@mail.ru
+ИванИванов|27|+7999000 1 1 11|example@@yandex..ru
+Иван Иванов|27|+7 (999) 0001111|example@yandex.ru
+johnDow|21|8-800-555-11-22|mega.ultra.man98@mail.domain.top.level
+adam smith| 45 | + 7 9 9 9 0 0 0 1111|mail_could_not_ends_withdot.@mail.domain
+name surname|25|telephone number| mylo@gmail.com
+ЭрихМария ремарк|51|+79992223344|remark@@@@@lit....gb.bg
+Имя Фамилия|старый|домашний|test1@test2@domain.com
