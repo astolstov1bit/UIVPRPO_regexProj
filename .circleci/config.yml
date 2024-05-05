@@ -9,8 +9,10 @@ jobs:
       - run:
           name: Analyze on SonarCloud
           command: mvn verify sonar:sonar -Dsonar.projectKey=astolstov1bit_UIVPRPO_regexProj -DskipTests=true
+      - run:
+          name: Run tests and send coverage to Coveralls
+          command: mvn clean test jacoco:report coveralls:report -DrepoToken=COVERALLS_REPO_TOKEN
       - run: mvn test
-
 
 workflows:
   main:
