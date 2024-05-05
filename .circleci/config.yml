@@ -8,8 +8,7 @@ jobs:
       - checkout
       - run:
           name: Analyze on SonarCloud
-          command: mvn verify sonar:sonar -Dsonar.projectKey=astolstov1bit_UIVPRPO_regexProj
-      - run: mvn -U clean install -DskipTests
+          command: mvn verify sonar:sonar -Dsonar.projectKey=astolstov1bit_UIVPRPO_regexProj -DskipTests=true
       - run: mvn test
 
 workflows:
