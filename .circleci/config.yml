@@ -3,12 +3,12 @@ jobs:
   build:
     working_directory: ~/project
     docker:
-      - image: 'cimg/openjdk:17.0'
+      - image: 'cimg/openjdk:22.0'
     steps:
       - checkout
       - run:
           name: Run tests and send coverage to Coveralls
-          command: mvn clean test jacoco:report coveralls:report -DrepoToken=COVERALLS_REPO_TOKEN
+          command: mvn cobertura:cobertura coveralls:report -DrepoToken=COVERALLS_REPO_TOKEN
       - run:
           name: Analyze on SonarCloud
           command: mvn verify sonar:sonar -Dsonar.projectKey=astolstov1bit_UIVPRPO_regexProj -DskipTests=true
