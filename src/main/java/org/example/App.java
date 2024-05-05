@@ -1,8 +1,12 @@
 package org.example;
 
 import java.io.*;
+
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.logging.Logger;
 
 /**
  * RegexProject
@@ -13,62 +17,77 @@ public class App
     private static final String INPUT_FILENAME = "input.txt";
     private static final String OUTPUT_FILENAME = "output.txt";
 
+    static Logger logger = Logger.getLogger(App.class.getName());
     public static void main(String[] args) {
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(INPUT_FILENAME));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(OUTPUT_FILENAME));
+        ArrayList<String> lines = new ArrayList<>();
+        ArrayList<String> resultLines = new ArrayList<>();
 
+        //чтение входящего файла
+        try (BufferedReader reader = new BufferedReader(new FileReader(INPUT_FILENAME))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                System.out.println();
-                System.out.println("input line: " + line);
-
-                String[] fields = line.split("\\|");
-                if (fields.length != 4 || anyEmpty(fields)) {
-                    System.out.println("Invalid line format");
-                    continue;
-                }
-
-                //имя
-                String name = fields[0];
-                //возраст
-                String age = fields[1];
-                //телефон
-                String tel = fields[2];
-                //почта
-                String mail = fields[3];
-
-                Pattern namePattern = Pattern.compile("([^|\\s]+ *[^|]+)");
-                Pattern agePattern = Pattern.compile("[0-9]+");
-                Pattern telPattern = Pattern.compile("([\\+]?[(]?([0-9]\\W*){3}[)]?[-\\s\\.]?([0-9]\\W*){3}[-\\s\\.]?([0-9]\\W*){4,6})");
-                Pattern mailPattern = Pattern.compile("[^@ \\t\\r\\n]+[^.]@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+");
-
-                name = cleanString(name, namePattern, 1);
-                name = (name.startsWith("OK")) ? formatName(name): "";
-
-                age = cleanString(age, agePattern, 1);
-                age = (age.startsWith("OK"))? age.split("\\|")[1]: "";
-
-                tel = cleanString(tel, telPattern, 0);
-                tel = (tel.startsWith("OK"))? formatPhoneNumber(tel): "";
-
-                mail = cleanString(mail, mailPattern, 1);
-                mail = (mail.startsWith("OK"))? mail.split("\\|")[1]: "";
-
-                String resultLine = name + "|" + age + "|" + tel + "|" + mail;
-                writer.write(resultLine);
-                writer.newLine();
-                System.out.println("output line: " + resultLine);
+                lines.add(line);
             }
-            reader.close();
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
+        for (String line : lines)
+        {
+            line = line.trim();
+            logger.info("input line: " + line);
+
+            String[] fields = line.split("\\|");
+            if (fields.length != 4 || anyEmpty(fields)) {
+                logger.info("Invalid line format");
+                continue;
+            }
+
+            //имя
+            String name = fields[0];
+            //возраст
+            String age = fields[1];
+            //телефон
+            String tel = fields[2];
+            //почта
+            String mail = fields[3];
+
+            Pattern namePattern = Pattern.compile("([^|\\s]+ *[^|]+)");
+            Pattern agePattern = Pattern.compile("\\d+");
+            Pattern telPattern = Pattern.compile("([+]?[(]?(\\d\\W*){3}[)]?[-\\s.]?(\\d\\W*){3}[-\\s.]?(\\d\\W*){4,6})");
+            Pattern mailPattern = Pattern.compile("[^@ \\t\\r\\n]+[^.]@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+");
+
+            name = cleanString(name, namePattern, 1);
+            name = (name.startsWith("OK")) ? formatName(name): "";
+
+            age = cleanString(age, agePattern, 1);
+            age = (age.startsWith("OK"))? age.split("\\|")[1]: "";
+
+            tel = cleanString(tel, telPattern, 0);
+            tel = (tel.startsWith("OK"))? formatPhoneNumber(tel): "";
+
+            mail = cleanString(mail, mailPattern, 1);
+            mail = (mail.startsWith("OK"))? mail.split("\\|")[1]: "";
+
+            String resultLine = name + "|" + age + "|" + tel + "|" + mail;
+            resultLines.add(resultLine);
+            logger.info("output line: " + resultLine);
+        }
+
+        //запись в файл результатов
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(OUTPUT_FILENAME))) {
+            for (String resultLine : resultLines) {
+                writer.write(resultLine);
+                writer.newLine();
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     private static boolean anyEmpty(String[] array) {
         for (String s : array) {
@@ -102,7 +121,7 @@ public class App
         String[] nameParts = name.split(" ");
         StringBuilder nameBuilder = new StringBuilder();
         for (String part : nameParts) {
-            if (part != "") {
+            if (!Objects.equals(part, "")) {
                 part = part.trim().substring(0, 1).toUpperCase() + part.trim().substring(1).toLowerCase();
                 nameBuilder.append(part).append(" ");
             }

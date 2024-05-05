@@ -17,7 +17,7 @@ public class TestOutputFile {
     String currentDir = System.getProperty("user.dir");
 
     @Test
-    public void TestAppOutputEqualsRef() throws IOException {
+    void TestAppOutputEqualsRef() throws IOException {
         App.main(null);
         String pathOutFileApp = Paths.get(currentDir, OUTPUT_FILENAME).toString();
         String pathOutFileRef = Paths.get(currentDir, OUTPUT_REFNAME).toString();
