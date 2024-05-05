@@ -12,7 +12,9 @@ jobs:
       - checkout
       - run:
           command: mvn test
-      - coveralls/upload
+      - coveralls/upload:
+          Cover_format: jacoco
+          token: COVERALLS_REPO_TOKEN
       - run:
           name: Analyze on SonarCloud
           command: mvn verify sonar:sonar -Dsonar.projectKey=astolstov1bit_UIVPRPO_regexProj -DskipTests=true
