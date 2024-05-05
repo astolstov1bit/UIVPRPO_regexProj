@@ -14,6 +14,7 @@ orbs:
             name: Analyze on SonarCloud
             command: mvn verify sonar:sonar -Dsonar.projectKey=astolstov1bit_UIVPRPO_regexProj -DskipTests=true
 
+
 workflows:
   main:
     jobs:
