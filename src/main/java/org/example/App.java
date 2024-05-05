@@ -42,34 +42,16 @@ public class App
                 Pattern mailPattern = Pattern.compile("[^@ \\t\\r\\n]+[^.]@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+");
 
                 name = cleanString(name, namePattern, 1);
-                if (name.startsWith("OK")) {
-                    name = formatName(name);
-                } else {
-                    name = "";
-
-                }
+                name = (name.startsWith("OK")) ? formatName(name): "";
 
                 age = cleanString(age, agePattern, 1);
-                if (age.startsWith("OK")) {
-                    age = age.split("\\|")[1];
-                } else {
-                    age = "";
-
-                }
+                age = (age.startsWith("OK"))? age.split("\\|")[1]: "";
 
                 tel = cleanString(tel, telPattern, 0);
-                if (tel.startsWith("OK")) {
-                    tel = formatPhoneNumber(tel);
-                } else {
-                    tel = "";
-                }
+                tel = (tel.startsWith("OK"))? formatPhoneNumber(tel): "";
 
                 mail = cleanString(mail, mailPattern, 1);
-                if (mail.startsWith("OK")) {
-                    mail = mail.split("\\|")[1];
-                } else {
-                    mail = "";
-                }
+                mail = (mail.startsWith("OK"))? mail.split("\\|")[1]: "";
 
                 String resultLine = name + "|" + age + "|" + tel + "|" + mail;
                 writer.write(resultLine);
