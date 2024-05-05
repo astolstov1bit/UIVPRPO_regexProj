@@ -31,9 +31,13 @@ public class App
                     continue;
                 }
 
+                //имя
                 String name = fields[0];
+                //возраст
                 String age = fields[1];
+                //телефон
                 String tel = fields[2];
+                //почта
                 String mail = fields[3];
 
                 Pattern namePattern = Pattern.compile("([^|\\s]+ *[^|]+)");
