@@ -4,6 +4,7 @@ import java.io.*;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.logging.Logger;
@@ -20,24 +21,16 @@ public class App
     static Logger logger = Logger.getLogger(App.class.getName());
     public static void main(String[] args) {
 
-        ArrayList<String> lines = new ArrayList<>();
+        ArrayList<String> lines;
         ArrayList<String> resultLines = new ArrayList<>();
 
         //чтение входящего файла
-        try (BufferedReader reader = new BufferedReader(new FileReader(INPUT_FILENAME))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-                lines.add(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        lines = readInputFile();
 
         for (String line : lines)
         {
             line = line.trim();
-            logger.info("input line: " + line);
+            logger.info(String.format("input line: %s", line));
 
             String[] fields = line.split("\\|");
             if (fields.length != 4 || anyEmpty(fields)) {
@@ -56,7 +49,7 @@ public class App
 
             Pattern namePattern = Pattern.compile("([^|\\s]+ *[^|]+)");
             Pattern agePattern = Pattern.compile("\\d+");
-            Pattern telPattern = Pattern.compile("([+]?[(]?(\\d\\W*){3}[)]?[-\\s.]?(\\d\\W*){3}[-\\s.]?(\\d\\W*){4,6})");
+            Pattern telPattern = Pattern.compile("([+]?\\(?(\\d\\W*){3}\\)?[-\\s.]?(\\d\\W*){3}[-\\s.]?(\\d\\W*){4,6})");
             Pattern mailPattern = Pattern.compile("[^@ \\t\\r\\n]+[^.]@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+");
 
             name = cleanString(name, namePattern, 1);
@@ -73,20 +66,40 @@ public class App
 
             String resultLine = name + "|" + age + "|" + tel + "|" + mail;
             resultLines.add(resultLine);
-            logger.info("output line: " + resultLine);
+            logger.info(String.format("output line: %s", resultLine));
         }
 
         //запись в файл результатов
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(OUTPUT_FILENAME))) {
+        writeOutputFile(resultLines);
+
+    }
+
+    private static ArrayList<String> readInputFile() {
+        ArrayList<String> lines = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(App.INPUT_FILENAME))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            logger.log(Level.WARNING, "trouble read input file", e);
+        }
+
+        return lines;
+    }
+
+    private static void writeOutputFile(ArrayList<String> resultLines) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(App.OUTPUT_FILENAME))) {
             for (String resultLine : resultLines) {
                 writer.write(resultLine);
                 writer.newLine();
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "trouble write output file", e);
         }
-
     }
 
     private static boolean anyEmpty(String[] array) {
