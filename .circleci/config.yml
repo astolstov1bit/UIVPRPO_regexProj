@@ -3,8 +3,17 @@ jobs:
   build:
     working_directory: ~/project
     docker:
-      - image: circleci/openjdk:17-jdk-buster
+      - image: 'cimg/openjdk:17.0'
     steps:
       - checkout
+      - run:
+          name: Analyze on SonarCloud
+          command: mvn verify sonar:sonar -Dsonar.projectKey=astolstov1bit_UIVPRPO_regexProj
       - run: mvn -U clean install -DskipTests
       - run: mvn test
+
+workflows:
+  main:
+    jobs:
+      - build:
+          context: SonarCloud
