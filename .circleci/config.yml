@@ -8,10 +8,11 @@ jobs:
       - checkout
       - run:
           name: Run tests and send coverage to Coveralls
-          command: mvn clean test jacoco:report coveralls:report -DrepoToken=COVERALLS_REPO_TOKEN
+          command: mvn cobertura:cobertura coveralls:report -DrepoToken=COVERALLS_REPO_TOKEN
       - run:
           name: Analyze on SonarCloud
           command: mvn verify sonar:sonar -Dsonar.projectKey=astolstov1bit_UIVPRPO_regexProj -DskipTests=true
+
 
 
 workflows:
