@@ -1,4 +1,8 @@
 version: 2.1
+
+orbs:
+  coveralls: coveralls/coveralls@2.2.1
+
 jobs:
   build:
     working_directory: ~/project
@@ -7,13 +11,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Run tests and send coverage to Coveralls
-          command: mvn cobertura:cobertura coveralls:report -DrepoToken=COVERALLS_REPO_TOKEN
+          command: mvn test
+      - coveralls/upload:
+          coverage_format: jacoco
+          token: COVERALLS_REPO_TOKEN
       - run:
           name: Analyze on SonarCloud
           command: mvn verify sonar:sonar -Dsonar.projectKey=astolstov1bit_UIVPRPO_regexProj -DskipTests=true
-
-
 
 workflows:
   main:
